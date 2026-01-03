@@ -33,7 +33,7 @@ services:
     networks:
       - db # Connects the service to the 'sameNetworkAsMysql' network
     depends_on:
-      - api # Specifies that the 'frontend' service depends on the 'api' service
+      - backend # Specifies that the 'frontend' service depends on the 'api' service
 
 networks:
   db: # Defines the 'sameNetworkAsMysql' network
