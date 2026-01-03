@@ -18,7 +18,8 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: aws
+    runs-on: [self-hosted, aws]
+
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -34,3 +35,4 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+          echo terceira coisa que eu coloquei 
