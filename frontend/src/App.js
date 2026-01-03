@@ -71,13 +71,13 @@ function App() {
       </button>
       <br />
       <hr />
-      <h2>Users List</h2>
+      <h2>Lista de usuários</h2>
       <center>
         <table>
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Name</th>
+              <th>Identificação</th>
+              <th>Nome</th>
             </tr>
           </thead>
           <tbody>
