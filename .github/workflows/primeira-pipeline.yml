@@ -1,11 +1,13 @@
+# In this pipeline, we execute these steps: Plan (planejamento)| Code (código) | Build (compilar aplicação) | Deploy (publicar aplicação)
+
 # This is a basic workflow to help you get started with Actions
 name: PrimeiraPipeline
 
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
-  push:
-    branches: [ "main" ]
+  #push:
+  #  branches: [ "main" ]
   #pull_request:
   #  branches: [ "main" ]
 
