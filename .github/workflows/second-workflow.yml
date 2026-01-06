@@ -1,0 +1,71 @@
+# This is a basic workflow to help you get started with Actions
+name: CI-Second
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  #push:
+  #  branches: [ "main" ]
+  #pull_request:
+  #  branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  ci:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    env:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Subir o docker compose 
+        run: |
+          docker compose build --no-cache
+
+      - name: Login no Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ env.DOCKERHUB_USERNAME }} # Nota: Aqui usamos 'env' ou 'secrets'
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Runs a single command using the runners shell
+      - name: Build o docker compose 
+        run: |
+          docker compose build --no-cache
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+
+      - name: Docker Push
+        run: |
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/infnet_backend:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/infnet_frontend:latest
+
+  cd:
+    runs-on: aws
+    needs: [ci]
+
+    env:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login no Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ env.DOCKERHUB_USERNAME }} # Nota: Aqui usamos 'env' ou 'secrets'
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Runs a single command using the runners shell
+      - name: Subir o docker compose 
+        run: |
+          docker compose pull
+          docker compose up --force-recreate -d
