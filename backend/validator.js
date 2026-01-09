@@ -1,8 +1,4 @@
-/**
- * Verifica se a string de entrada é um nome válido.
- * @param {string} name 
- * @returns {boolean}
- */
+// Verifica se o valor informado é uma string
 function isValidUserName(name) {
   if (typeof name !== 'string') {
     return false;

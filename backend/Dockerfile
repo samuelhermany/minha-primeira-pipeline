@@ -13,6 +13,9 @@ RUN npm install
 # Copy the rest of the application's source code to the container
 COPY . .
 
+# Se o 'npm test' falhar, o build falha e a imagem NÃO é criada.
+RUN npm test
+
 # Expose the port that the application listens on
 EXPOSE 3000
 
