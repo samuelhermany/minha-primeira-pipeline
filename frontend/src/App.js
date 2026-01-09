@@ -2,7 +2,7 @@ import "./App.css";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 
-const URL = "http://13.218.248.241:3000";
+const URL = "http://52.205.229.232:3000";
 //const URL = "http://backend.api.infnet.com.br"; - forma correta em produção
 
 function App() {
