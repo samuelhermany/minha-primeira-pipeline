@@ -45,7 +45,7 @@ jobs:
       # Send the image to Docker Hub
       - name: Docker push
         run: |
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/infnet_backend:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/infnet_frontend:latest
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/infnet_backend:latest
   # Job 2 - Continuos Deploy          
   cd:
