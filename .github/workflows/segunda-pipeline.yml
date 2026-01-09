@@ -14,36 +14,65 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-    build:
-      # The type of runner that the job will run on - Uses GitHub Infrastructure
-      runs-on: ubuntu-latest
+  # Job 1 - This workflow contains a single job called "build"
+  ci:
+    # The type of runner that the job will run on - Uses GitHub Infrastructure
+    runs-on: ubuntu-latest
 
-      # Environment variables
-      env:
-        DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+    # Environment variables
+    env:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
 
-      # Steps represent a sequence of tasks that will be executed as part of the job
-      steps:
-        # Code Checkout 
-        - uses: actions/checkout@v4
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Code Checkout 
+      - uses: actions/checkout@v4
 
-        # DockerHub Login
-        - name: Login no Docker Hub
-          uses: docker/login-action@v3
-          with:
-            username: ${{ env.DOCKERHUB_USERNAME }}
-            password: ${{ secrets.DOCKERHUB_TOKEN }}
+      # DockerHub Login
+      - name: Login no Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ env.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-        # Build image
-        - name: Build o docker compose 
-          run: |
-            docker compose build --no-cache
-          env:
-            DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME}}   
-        
-        # Send the image to Docker Hub
-        - name: Docker push
-          run: |
-            docker push ${{ secrets.DOCKERHUB_USERNAME }}/infnet_backend:latest
-            docker push ${{ secrets.DOCKERHUB_USERNAME }}/infnet_backend:latest
+      # Build image
+      - name: Build o docker compose 
+        run: |
+          docker compose build --no-cache
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME}}   
+      
+      # Send the image to Docker Hub
+      - name: Docker push
+        run: |
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/infnet_backend:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/infnet_backend:latest
+  # Job 2 - Continuos Deploy          
+  cd:
+    # Indicate runner execute inside AWS and that need RUNNER with name 'ci' execute before that
+    runs-on: aws    
+    needs: [ci]
+
+    # Environment variables
+    env:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Code Checkout 
+      - uses: actions/checkout@v4
+
+      # DockerHub Login
+      - name: Login no Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ env.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Execute the real deploy
+      - name: Subir o docker compose 
+        # Get the lastest image version from Docker Hub
+        # Forces the recreation of containers even if the image has not been modified
+        run: |
+          docker compose pull
+          docker compose up --force-recreate -d

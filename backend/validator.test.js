@@ -12,7 +12,7 @@ describe('Teste de Unidade: Validação de Nome de Usuário', () => {
 
   // Caso de falha 1: Nome muito curto
   test('deve retornar FALSE para um nome com menos de 3 caracteres', () => {
-    expect(isValidUserName('Jo')).toBe(true);
+    expect(isValidUserName('Jo')).toBe(false);
   });
   
   // Caso de falha 2: Lidar com espaços em branco
